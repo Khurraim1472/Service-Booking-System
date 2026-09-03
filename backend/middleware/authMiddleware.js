@@ -1,3 +1,5 @@
+const Service = require("../models/Service");
+const { findById } = require("../models/Service");
 const User = require("../models/User")
 const jwt = require("jsonwebtoken")
 
@@ -19,8 +21,8 @@ const protectRoute = async (req, res, next) => {
         //find user
         const user = await User.findById(decoded.id)
         if (!user) {
-  return res.status(401).json({ message: "User not found" })
-}
+            return res.status(401).json({ message: "User not found" })
+        }
         req.user = user
         next()
 
@@ -47,6 +49,37 @@ const authorizeRole = (role) => {
         next();
     };
 };
+// check ownership middleware
+const ownershipCheck = async (req, res, next) => {
+
+    try {
+        const service = await Service.findById(req.params.id)
+        if (!service) {
+            return res.status(404).json({
+                success: false,
+                message: "Service not found!"
+            })
+        }
+        if (!service.provider.equals(req.user._id)) {
+            return res.status(403).json({
+                success: false,
+                message: "Access Denied!"
+            })
+
+        }
+        next()
+
+    }
+    
+    catch (err) {
+    return res.status(500).json({
+        message: "Server error!",
+        error: err.message
+    })
 
 
-    module.exports = { protectRoute, authorizeRole }
+
+}
+}
+
+module.exports = { protectRoute, authorizeRole,ownershipCheck }

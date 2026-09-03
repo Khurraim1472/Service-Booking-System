@@ -127,12 +127,7 @@ const updateService = async (req, res) => {
                 message: "Service not found!"
             })
         }
-        // check the service ownership
-        if(service.provider!== req.user._id){
-            return res.status(403).json({
-                message: "Access denied!"
-            });
-        }
+     
         return res.status(200).json({
             success: true,
             message: "Service info Updated Successfully!",
