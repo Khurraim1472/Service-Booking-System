@@ -4,14 +4,24 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true,  "Name is required"],
       trim: true,
       minlength: 3,
       maxlength: 50,
     },
+    phone:{
+      type:String,
+      required:[true, "Phone is required"],
+  
+      unique:true,
+      trim:true  ,
+       minlength: [11, "Phone number must be 11 digits"],
+  maxlength: [11, "Phone number must be 11 digits"],
+  match: [/^03\d{9}$/, "Please enter a valid  phone number"]
+    },
     email: {
       type: String,
-      required: true,
+      required: [true, "Phone is required"],
       unique: true,
       trim: true,
       lowercase: true,
@@ -22,7 +32,7 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: [true, "Phone is required"],
       minlength: 6,
       trim: true,
     },

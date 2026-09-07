@@ -2,17 +2,80 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+const emailRegex=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const phoneRegex=/^03\d{9}$/;
+
 // REGISTER
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name,phone, email, password ,confirmPassword} = req.body;
+    
+    // checkinG FORM validations 
+    if (!name) {
+  return res.status(400).json({
+    success: false,
+    message: "Name is required"
+  });
+}
+
+if (!email) {
+  return res.status(400).json({
+    success: false,
+    message: "Email is required"
+  });
+}
+
+if (!phone) {
+  return res.status(400).json({
+    success: false,
+    message: "Phone is required"
+  });
+}
+
+if (!password) {
+  return res.status(400).json({
+    success: false,
+    message: "Password is required"
+  });
+}
+
+if (!confirmPassword) {
+  return res.status(400).json({
+    success: false,
+    message: "Confirm password is required"
+  });
+}
+//checks email validation 
+if (!emailRegex.test(email)) {
+  return res.status(401).json({
+  success:false,
+  message:"Enter the correct email!",
+  })
+}
+//checks phone number validation
+
+if (!phoneRegex.test(phone)) {
+  return res.status(400).json({
+  success:false,
+  message:"Enter the correct phone number!",
+  })
+}
 
     // check user already exists
-    const userExists = await User.findOne({ email });
+    const userExists = await User.findOne({ email,phone  });
     if (userExists) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({
+         message: "User already exists!"
+         });
     }
+  //  check the password and confirm password fields
+  if(password!== confirmPassword){
+    return res.status(400).json({
+      success:false,
+      message:"Password and Confirm password do not match!",
+    })
 
+  }
     // hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -21,6 +84,7 @@ const registerUser = async (req, res) => {
     const user = await User.create({
       name,
       email,
+      phone,
       password: hashedPassword,
     });
 
