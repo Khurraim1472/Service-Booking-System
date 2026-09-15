@@ -76,6 +76,20 @@ if (!phoneRegex.test(phone)) {
     })
 
   }
+
+if (
+  password.length < 8 ||
+  !/[A-Z]/.test(password) ||
+  !/[a-z]/.test(password) ||
+  !/[0-9]/.test(password) ||
+  !/[^A-Za-z0-9]/.test(password)
+) {
+  return res.status(400).json({
+    success: false,
+    message:
+      "Password must be at least 8 characters and contain uppercase, lowercase, number, and special character!"
+  });
+}
     // hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -94,7 +108,27 @@ if (!phoneRegex.test(phone)) {
       user,
     });
   } catch (error) {
+
+
     console.log(error)
+   if (error.code === 11000) {
+
+        if (error.keyPattern.email) {
+            return res.status(409).json({
+                success: false,
+                message: "Email already exists!"
+            });
+        }
+
+        if (error.keyPattern.phone) {
+            return res.status(409).json({
+                success: false,
+                message: "Phone number already exists!"
+            });
+        }
+    }
+
+
     res.status(500).json({
       success:false,
        message: "Something went wrong!" });
