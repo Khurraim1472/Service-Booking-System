@@ -14,6 +14,7 @@ const registerUser = async (req, res) => {
     if (!name) {
   return res.status(400).json({
     success: false,
+    field:"name",
     message: "Name is required"
   });
 }
@@ -21,6 +22,7 @@ const registerUser = async (req, res) => {
 if (!email) {
   return res.status(400).json({
     success: false,
+    field:"email",
     message: "Email is required"
   });
 }
@@ -28,6 +30,7 @@ if (!email) {
 if (!phone) {
   return res.status(400).json({
     success: false,
+    field:"phone",
     message: "Phone is required"
   });
 }
@@ -35,6 +38,7 @@ if (!phone) {
 if (!password) {
   return res.status(400).json({
     success: false,
+    field:"password",
     message: "Password is required"
   });
 }
@@ -42,6 +46,7 @@ if (!password) {
 if (!confirmPassword) {
   return res.status(400).json({
     success: false,
+    field:"confirmPassword",
     message: "Confirm password is required"
   });
 }
@@ -49,6 +54,7 @@ if (!confirmPassword) {
 if (!emailRegex.test(email)) {
   return res.status(401).json({
   success:false,
+  field:"email",
   message:"Enter the correct email!",
   })
 }
@@ -57,6 +63,7 @@ if (!emailRegex.test(email)) {
 if (!phoneRegex.test(phone)) {
   return res.status(400).json({
   success:false,
+  field:"phone",
   message:"Enter the correct phone number!",
   })
 }
@@ -65,13 +72,16 @@ if (!phoneRegex.test(phone)) {
     const userExists = await User.findOne({ email,phone  });
     if (userExists) {
       return res.status(400).json({
-         message: "User already exists!"
+        success:false,
+        field:"email",
+         message: "Email already exists!"
          });
     }
   //  check the password and confirm password fields
   if(password!== confirmPassword){
     return res.status(400).json({
       success:false,
+      
       message:"Password and Confirm password do not match!",
     })
 
@@ -86,8 +96,8 @@ if (
 ) {
   return res.status(400).json({
     success: false,
-    message:
-      "Password must be at least 8 characters and contain uppercase, lowercase, number, and special character!"
+    field:"password",
+    message:"Password must be at least 8 characters and contain uppercase, lowercase, number, and special character!"
   });
 }
     // hash password
@@ -116,6 +126,7 @@ if (
         if (error.keyPattern.email) {
             return res.status(409).json({
                 success: false,
+                field:"email",
                 message: "Email already exists!"
             });
         }
@@ -123,6 +134,7 @@ if (
         if (error.keyPattern.phone) {
             return res.status(409).json({
                 success: false,
+                field:"phone",
                 message: "Phone number already exists!"
             });
         }
