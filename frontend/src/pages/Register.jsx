@@ -29,7 +29,7 @@ export default function Register() {
       setSuccess("");
 
       const response = await axios.post(
-        "http://localhost:5000/api/auth/register",
+        "https://service-booking-system-k132.onrender.com/api/auth",
         formData
       );
       if (response.data.success) {
