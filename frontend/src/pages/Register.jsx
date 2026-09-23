@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
+import { Link } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import axios from "axios";
 
@@ -33,7 +34,7 @@ export default function Register() {
         formData
       );
       if (response.data.success) {
-        setSuccess("Registration successful!");
+        setSuccess(response.data.message);
       }
 
 
@@ -284,12 +285,7 @@ console.log(error.response?.data);
             </div>
 
 
-            {success && (
-              <p className="text-green-500 text-sm">
-                {success}
-              </p>
-            )}
-
+          
             <button type="submit" style={{
               width: '100%',
               background: '#E8A33D',
@@ -304,10 +300,16 @@ console.log(error.response?.data);
             }}>
               Register
             </button>
-          </form>
+             
 
+          </form>
+             {success && (
+              <p className="text-green-500 text-sm">
+                {success}
+              </p>
+            )}
           <p style={{ textAlign: 'center', fontSize: '13px', color: '#64748B', margin: '18px 0 0' }}>
-            Already have an account? <span style={{ color: '#E8A33D', fontWeight: 500, cursor: 'pointer' }}>Log in</span>
+            Already have an account? <span style={{ color: '#E8A33D', fontWeight: 500, cursor: 'pointer' }}><Link to="/login">Login</Link></span>
           </p>
         </div>
 
