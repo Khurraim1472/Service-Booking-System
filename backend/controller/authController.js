@@ -81,7 +81,7 @@ if (!phoneRegex.test(phone)) {
   if(password!== confirmPassword){
     return res.status(400).json({
       success:false,
-      
+      field:password,
       message:"Password and Confirm password do not match!",
     })
 
